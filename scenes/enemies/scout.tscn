@@ -1,0 +1,86 @@
+[gd_scene load_steps=9 format=3 uid="uid://cw0bc2u1ydlmn"]
+
+[ext_resource type="Texture2D" uid="uid://dtcmm0en1jmbg" path="res://graphics/enemies/scout.png" id="1_8fskf"]
+[ext_resource type="Script" path="res://scenes/enemies/scout.gd" id="1_fdbxp"]
+[ext_resource type="Shader" path="res://scenes/enemies/scout.gdshader" id="2_5w81i"]
+[ext_resource type="Texture2D" uid="uid://b2s1642uyeoqs" path="res://graphics/decals/white.png" id="4_ovk4p"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_l1oxk"]
+resource_local_to_scene = true
+shader = ExtResource("2_5w81i")
+shader_parameter/line_color = Color(1, 0.321569, 0.294118, 0)
+shader_parameter/line_thickness = 0.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_7utlg"]
+radius = 49.0102
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_oxup3"]
+radius = 928.69
+
+[sub_resource type="Gradient" id="Gradient_tw5sj"]
+colors = PackedColorArray(0.407843, 0.0352941, 0.0745098, 0.501961, 0.407843, 0.0352941, 0.0745098, 0)
+
+[node name="Scout" type="CharacterBody2D" groups=["Entities", "Scouts"]]
+collision_layer = 2
+collision_mask = 15
+script = ExtResource("1_fdbxp")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_l1oxk")
+position = Vector2(42, 27)
+rotation = 1.5708
+texture = ExtResource("1_8fskf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("CircleShape2D_7utlg")
+
+[node name="AttackArea" type="Area2D" parent="."]
+visible = false
+collision_layer = 16
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
+shape = SubResource("CircleShape2D_oxup3")
+
+[node name="LaserSpawnPositions" type="Node2D" parent="."]
+
+[node name="Marker2D" type="Marker2D" parent="LaserSpawnPositions"]
+position = Vector2(126.368, 13.3156)
+
+[node name="Marker2D2" type="Marker2D" parent="LaserSpawnPositions"]
+position = Vector2(115.629, -28.6336)
+
+[node name="Timers" type="Node" parent="."]
+
+[node name="HitCooldown" type="Timer" parent="Timers"]
+wait_time = 0.1
+one_shot = true
+
+[node name="LaserCooldown" type="Timer" parent="Timers"]
+
+[node name="Particles" type="Node2D" parent="."]
+
+[node name="HitParticles" type="CPUParticles2D" parent="Particles"]
+emitting = false
+amount = 10
+lifetime = 0.5
+preprocess = 8.61
+speed_scale = 2.5
+explosiveness = 0.18
+texture = ExtResource("4_ovk4p")
+emission_shape = 1
+emission_sphere_radius = 50.0
+direction = Vector2(-1000, 0)
+spread = 26.7
+gravity = Vector2(0, 0)
+initial_velocity_min = 52.63
+initial_velocity_max = 177.04
+scale_amount_min = 0.0
+scale_amount_max = 3.0
+color = Color(0.407843, 0.0352941, 0.0745098, 1)
+color_ramp = SubResource("Gradient_tw5sj")
+
+[connection signal="body_entered" from="AttackArea" to="." method="_on_attack_area_body_entered"]
+[connection signal="body_exited" from="AttackArea" to="." method="_on_attack_area_body_exited"]
+[connection signal="timeout" from="Timers/HitCooldown" to="." method="_on_hit_cooldown_timeout"]
+[connection signal="timeout" from="Timers/LaserCooldown" to="." method="_on_laser_cooldown_timeout"]
