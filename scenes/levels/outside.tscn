@@ -217,7 +217,7 @@ metadata/_edit_lock_ = true
 
 [node name="Car" parent="CarPath" index="0" instance=ExtResource("17_8pdam")]
 position = Vector2(610, 1238)
-rotation = 0.686199
+rotation = 0.686198
 
 [node name="LevelBarriers" type="Node2D" parent="." index="11"]
 metadata/_edit_lock_ = true
